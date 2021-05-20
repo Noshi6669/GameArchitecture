@@ -11,8 +11,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	{
 		ClearDrawScreen();
 
-		int num = 0;
-		DrawBox(200, 200, 400, 400, 0x00ff00, true);
+		int num = 200;
+		DrawBox(num, num, 400, 400, 0x00ff00, true);
 
 		ScreenFlip();
 	}
