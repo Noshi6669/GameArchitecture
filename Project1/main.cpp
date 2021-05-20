@@ -18,7 +18,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	{
 		//wchar_t path[80];
 		std::wostringstream oss;
-		oss << L"./Asset/Adventurer-1.5/Individual Sprites/adventurer-run-%02d";
+		oss << L"./Asset/Adventurer-1.5/Individual Sprites/adventurer-run-";
 		oss << std::setw(2);
 		oss << std::setfill(L'0');
 		oss << i << ".png";
