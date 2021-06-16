@@ -22,6 +22,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	int groundH = LoadGraph(L"./Asset/ground.png");
 	int graphH[6] = {};
+	int bgAssetH = LoadGraph(L"./Asset/Assets.png");
 	//読み込みの時点でエラー出てる
 	for (int i = 0; i < 6; i++)
 	{
@@ -39,6 +40,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	Vector2 playerPos = { 100,200 };
 
 	unsigned int frameNo = 0;
+	unsigned int frameForAngle = 0;
 	bool isReverse = false;
 	int lastMouseInput = 0;
 	while (ProcessMessage() != -1)
@@ -57,16 +59,26 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		auto count = 720 / block_size;
 		int x = 0;	//現在点
 		int y = 240;
+		constexpr float sin_amp = 100.0f;
 		for (int i = 0;i < count;++i)
 		{
 			int nextX = i * block_size;
-			int nextY = 240 + 100.0f * sin((float)(0.5 * nextX) / 180.0f * DX_PI);
-			DrawLineAA(x, y, nextX, nextY, 0xffffff, 5.0f);
-			DrawModiGraph(x, y,	//左上
-				nextX, nextY,	//右上
-				nextX, nextY + 32,	//右下(右上から真下に)
-				x, y + 32,			//左下(左上から真下に)
-				groundH, true);
+			int nextY = 240 + sin_amp * sin((float)(0.5 * nextX + frameForAngle) / 180.0f * DX_PI);
+			//DrawLineAA(x, y, nextX, nextY, 0xffffff, 5.0f);
+			//DrawModiGraph(x, y,	//左上
+			//	nextX, nextY,	//右上
+			//	nextX, nextY + 32,	//右下(右上から真下に)
+			//	x, y + 32,			//左下(左上から真下に)
+			//	groundH, true);
+
+			DrawRectModiGraph(
+				x, y,
+				nextX, nextY,
+				nextX, nextY + block_size,
+				x, y + block_size,
+				48, 0, 16, 16,
+				bgAssetH, true
+			);
 			x = nextX;
 			y = nextY;
 		}
@@ -79,7 +91,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 		auto imgIdx = frameNo / 10;
 		int num = 0;
-		DrawBox(200, 200, 400, 400, 0x00ff00, true);
+		//DrawBox(200, 200, 400, 400, 0x00ff00, true);
 
 		int centerX = 16;
 		if (isReverse)
@@ -94,6 +106,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		//DrawRotaGraph(playerPos.x, playerPos.y, 4.0f, angle, graphH[frameNo / 10], true);
 		ScreenFlip();
 		frameNo = (frameNo + 1) % 60;
+		frameForAngle = (frameForAngle + 1) % 720;
 	}
 
 	DxLib_End();
