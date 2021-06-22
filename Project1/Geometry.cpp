@@ -63,9 +63,20 @@ void Vector2::operator-=(const Vector2& v)
     y -= v.y;
 }
 
+bool Vector2::operator==(const Vector2& v)
+{
+    return ((x == v.x) && (y == v.y));
+}
+
 void Vector2::Rotate90(void)
 {
     std::swap(x, y);
+    x = -x;
+}
+
+Vector2 Vector2::Rotated90(void)
+{
+    return { -y,x };
 }
 
 

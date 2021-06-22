@@ -16,8 +16,13 @@ struct Vector2
 
 	void operator+=(const Vector2& v);
 	void operator-=(const Vector2& v);
+	bool operator==(const Vector2& v);
 	//90“x‰ñ“]‚³‚¹‚é
 	void Rotate90(void);
+	Vector2 Rotated90(void);
+	static const Vector2 Zero() {
+		return { 0.0f,0.0f };
+	}
 };
 
 //ƒxƒNƒgƒ‹‚Ì‘«‚µŽZ

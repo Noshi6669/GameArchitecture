@@ -57,30 +57,54 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 		constexpr size_t block_size = 32;
 		auto count = 720 / block_size;
-		int x = 0;	//現在点
-		int y = 240;
+		Vector2 currentPos = { 0,240 };
+		Vector2 lastDelta90Vectors[2] = { { 0.0f,0.0f },{ 0.0f,0.0f } };
 		constexpr float sin_amp = 100.0f;
 		for (int i = 0;i < count;++i)
 		{
 			int nextX = i * block_size;
 			int nextY = 240 + sin_amp * sin((float)(0.5 * nextX + frameForAngle) / 180.0f * DX_PI);
-			//DrawLineAA(x, y, nextX, nextY, 0xffffff, 5.0f);
-			//DrawModiGraph(x, y,	//左上
-			//	nextX, nextY,	//右上
-			//	nextX, nextY + 32,	//右下(右上から真下に)
-			//	x, y + 32,			//左下(左上から真下に)
-			//	groundH, true);
+			
+			auto deltaVec = Vector2(block_size, nextY).Normalized() * block_size;
+			auto nextPos = currentPos + deltaVec;
+
+			auto middleVec0 = deltaVec;
+			auto middleVecR = deltaVec.Rotated90();
+			if (!(lastDelta90Vectors[0] == Vector2::Zero()))
+			{
+				middleVecR = (middleVecR + lastDelta90Vectors[0]).Normalized() * block_size;
+			}
+			auto middleVecL = lastDelta90Vectors[0];
+			if (!(lastDelta90Vectors[1] == Vector2::Zero()))
+			{
+				middleVecL = (middleVecL + lastDelta90Vectors[1]).Normalized() * block_size;
+			}
+			lastDelta90Vectors[1] = lastDelta90Vectors[0];
+			lastDelta90Vectors[0] = deltaVec.Rotated90();
+
+			nextPos += Vector2(block_size,
+				50.0f * sinf(0.5f * (float)(frameForAngle + block_size * i) * DX_PI_F / 180.0f)
+			).Normalized() * block_size;
+
+			DrawLineAA(currentPos.x,currentPos.y, //始点
+				nextPos.x, nextPos.y, //終点
+				0xffffff, 10.0f);
+
+			currentPos = nextPos;
+
+			auto middlePosL = currentPos + middleVecL;
+			auto middlePosR = nextPos + middleVecR;
 
 			DrawRectModiGraph(
-				x, y,
-				nextX, nextY,
-				nextX, nextY + block_size,
-				x, y + block_size,
+				currentPos.x,currentPos.y,
+				nextPos.x, nextPos.y,
+				middlePosR.x, middlePosR.y,
+				middlePosL.x, middlePosL.y,
 				48, 0, 16, 16,
 				bgAssetH, true
 			);
-			x = nextX;
-			y = nextY;
+			/*x = nextX;
+			y = nextY;*/
 		}
 
 
