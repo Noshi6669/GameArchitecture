@@ -57,18 +57,24 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 		constexpr size_t block_size = 32;
 		auto count = 720 / block_size;
-		Vector2 currentPos = { 0,240 };
+		constexpr int base_y = 240;
+		constexpr float sin_amp = 50.0f;
+		int x = 0;
+		int y = base_y + sin_amp * sin((float)(frameForAngle) / 180.0f * DX_PI);
+		Vector2 currentPos(x, y);
+
 		Vector2 lastDelta90Vectors[2] = { { 0.0f,0.0f },{ 0.0f,0.0f } };
-		constexpr float sin_amp = 100.0f;
 		for (int i = 0;i < count;++i)
 		{
 			int nextX = i * block_size;
-			int nextY = 240 + sin_amp * sin((float)(0.5 * nextX + frameForAngle) / 180.0f * DX_PI);
+			int nextY = sin_amp * sin((float)(0.5 * nextX + frameForAngle) / 180.0f * DX_PI);
 			
 			auto deltaVec = Vector2(block_size, nextY).Normalized() * block_size;
 			auto nextPos = currentPos + deltaVec;
+			//auto nextPos = currentPos;
 
 			auto middleVec0 = deltaVec;
+
 			auto middleVecR = deltaVec.Rotated90();
 			if (!(lastDelta90Vectors[0] == Vector2::Zero()))
 			{
@@ -82,15 +88,22 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			lastDelta90Vectors[1] = lastDelta90Vectors[0];
 			lastDelta90Vectors[0] = deltaVec.Rotated90();
 
-			nextPos += Vector2(block_size,
+			/*nextPos += Vector2(block_size,
 				50.0f * sinf(0.5f * (float)(frameForAngle + block_size * i) * DX_PI_F / 180.0f)
-			).Normalized() * block_size;
-
-			DrawLineAA(currentPos.x,currentPos.y, //始点
-				nextPos.x, nextPos.y, //終点
-				0xffffff, 10.0f);
-
-			currentPos = nextPos;
+			).Normalized() * block_size;*/
+			//DrawLineAA(currentPos.x,currentPos.y, //始点
+			//	nextPos.x, nextPos.y, //終点
+			//	0xffffff, 10.0f);
+			//auto rightPos = nextPos + deltaVec.Rotated90();
+			//DrawLineAA(//右辺
+			//	nextPos.x, nextPos.y, //始点
+			//	rightPos.x, rightPos.y, //終点
+			//	0xffffff, 2.0f);
+			//auto leftPos = currentPos + deltaVec.Rotated90();
+			//DrawLineAA(//左辺
+			//	currentPos.x, currentPos.y, //始点
+			//	leftPos.x, leftPos.y, //終点
+			//	0x8888ff, 2.0f);
 
 			auto middlePosL = currentPos + middleVecL;
 			auto middlePosR = nextPos + middleVecR;
@@ -103,8 +116,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 				48, 0, 16, 16,
 				bgAssetH, true
 			);
-			/*x = nextX;
-			y = nextY;*/
+			currentPos = nextPos;
 		}
 
 
