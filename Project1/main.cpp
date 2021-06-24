@@ -23,17 +23,14 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	int groundH = LoadGraph(L"./Asset/ground.png");
 	int graphH[6] = {};
 	int bgAssetH = LoadGraph(L"./Asset/Assets.png");
-	//読み込みの時点でエラー出てる
 	for (int i = 0; i < 6; i++)
 	{
 		//wchar_t path[80];
 		std::wostringstream oss;
 		oss << L"./Asset/Adventurer-1.5/Individual Sprites/";
 		oss << std::setw(1);
-		//oss << std::setfill(L'0');
 		oss << i << ".png";
 
-		//wsprintf(path, L"../../Asset/Adventurer-1.5/ndividual Sprites/adventurer-run-%02d.png",80);
 		graphH[i] = LoadGraph(oss.str().c_str());
 	}
 
@@ -64,6 +61,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		Vector2 currentPos(x, y);
 
 		Vector2 lastDelta90Vectors[2] = { { 0.0f,0.0f },{ 0.0f,0.0f } };
+		Vector2 lastPos = { 0.0f,0.0f };
 		for (int i = 0;i < count;++i)
 		{
 			int nextX = i * block_size;
@@ -74,12 +72,13 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			//auto nextPos = currentPos;
 
 			auto middleVec0 = deltaVec;
-
-			auto middleVecR = deltaVec.Rotated90();
+			//ひとつ前
+			auto middleVecR = deltaVec.Rotated90();	//現在
 			if (!(lastDelta90Vectors[0] == Vector2::Zero()))
 			{
 				middleVecR = (middleVecR + lastDelta90Vectors[0]).Normalized() * block_size;
 			}
+			//二つ前
 			auto middleVecL = lastDelta90Vectors[0];
 			if (!(lastDelta90Vectors[1] == Vector2::Zero()))
 			{
@@ -87,35 +86,39 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			}
 			lastDelta90Vectors[1] = lastDelta90Vectors[0];
 			lastDelta90Vectors[0] = deltaVec.Rotated90();
+			auto rotaDelta = deltaVec.Rotated90();
+			auto rightPos = currentPos + rotaDelta;
+			auto leftPos = lastPos + rotaDelta;
 
-			/*nextPos += Vector2(block_size,
-				50.0f * sinf(0.5f * (float)(frameForAngle + block_size * i) * DX_PI_F / 180.0f)
-			).Normalized() * block_size;*/
-			//DrawLineAA(currentPos.x,currentPos.y, //始点
-			//	nextPos.x, nextPos.y, //終点
+			//DrawLineAA(lastPos.x,lastPos.y, //始点
+			//	currentPos.x, currentPos.y, //終点
 			//	0xffffff, 10.0f);
-			//auto rightPos = nextPos + deltaVec.Rotated90();
 			//DrawLineAA(//右辺
-			//	nextPos.x, nextPos.y, //始点
+			//	currentPos.x, currentPos.y, //始点
 			//	rightPos.x, rightPos.y, //終点
 			//	0xffffff, 2.0f);
-			//auto leftPos = currentPos + deltaVec.Rotated90();
 			//DrawLineAA(//左辺
-			//	currentPos.x, currentPos.y, //始点
+			//	lastPos.x, lastPos.y, //始点
 			//	leftPos.x, leftPos.y, //終点
 			//	0x8888ff, 2.0f);
+			if (!(lastPos == Vector2::Zero()))
+			{
+				auto middlePosR = currentPos + middleVecR;
+				auto middlePosL = lastPos + middleVecL;
 
-			auto middlePosL = currentPos + middleVecL;
-			auto middlePosR = nextPos + middleVecR;
+				DrawRectModiGraph(
+					lastPos.x, lastPos.y,
+					currentPos.x, currentPos.y,
+					middlePosR.x, middlePosR.y,
+					middlePosL.x, middlePosL.y,
+					48, 0, 16, 16,
+					bgAssetH, true
+				);
+			}
+		
+			
 
-			DrawRectModiGraph(
-				currentPos.x,currentPos.y,
-				nextPos.x, nextPos.y,
-				middlePosR.x, middlePosR.y,
-				middlePosL.x, middlePosL.y,
-				48, 0, 16, 16,
-				bgAssetH, true
-			);
+			lastPos = currentPos;
 			currentPos = nextPos;
 		}
 
