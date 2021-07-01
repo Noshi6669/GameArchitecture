@@ -23,6 +23,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	int groundH = LoadGraph(L"./Asset/ground.png");
 	int graphH[6] = {};
 	int bgAssetH = LoadGraph(L"./Asset/Assets.png");
+	int arrowH = LoadGraph(L"./Asset/arrow2.png");
+
 	for (int i = 0; i < 6; i++)
 	{
 		//wchar_t path[80];
@@ -52,8 +54,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		}
 		lastMouseInput = currentMouseInput;
 
-		constexpr size_t block_size = 32;
-		auto count = 720 / block_size;
+		int arrW, arrH;
+		GetGraphSize(arrowH, &arrW, &arrH);
+		constexpr size_t block_size = 16;
+		constexpr size_t width = 800;
+		auto count = width / block_size;
+		float weight = (float)arrW / (float)width;
 		constexpr int base_y = 240;
 		constexpr float sin_amp = 50.0f;
 		int x = 0;
@@ -78,12 +84,14 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			{
 				middleVecR = (middleVecR + lastDelta90Vectors[0]).Normalized() * block_size;
 			}
+
 			//二つ前
 			auto middleVecL = lastDelta90Vectors[0];
 			if (!(lastDelta90Vectors[1] == Vector2::Zero()))
 			{
 				middleVecL = (middleVecL + lastDelta90Vectors[1]).Normalized() * block_size;
 			}
+
 			lastDelta90Vectors[1] = lastDelta90Vectors[0];
 			lastDelta90Vectors[0] = deltaVec.Rotated90();
 			auto rotaDelta = deltaVec.Rotated90();
@@ -101,27 +109,25 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			//	lastPos.x, lastPos.y, //始点
 			//	leftPos.x, leftPos.y, //終点
 			//	0x8888ff, 2.0f);
+
 			if (!(lastPos == Vector2::Zero()))
 			{
-				auto middlePosR = currentPos + middleVecR;
-				auto middlePosL = lastPos + middleVecL;
-
+				auto middlePosL = currentPos + middleVecL * 2;
+				auto middlePosR = nextPos + middleVecR * 2;
 				DrawRectModiGraph(
-					lastPos.x, lastPos.y,
 					currentPos.x, currentPos.y,
+					nextPos.x, nextPos.y,
 					middlePosR.x, middlePosR.y,
 					middlePosL.x, middlePosL.y,
-					48, 0, 16, 16,
-					bgAssetH, true
+					i * block_size * weight, 0,
+					block_size * weight, 64,
+					arrowH, true
 				);
 			}
 		
-			
-
 			lastPos = currentPos;
 			currentPos = nextPos;
 		}
-
 
 
 		auto mpos = GetMousePosition2();
