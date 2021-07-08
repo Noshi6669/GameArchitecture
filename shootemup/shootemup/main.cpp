@@ -136,11 +136,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			hshot.vel = (hshot.vel + (enemypos - hshot.pos).Normalized()).Normalized() * homing_shot_speed;
 			DrawCircleAA(hshot.pos.x, hshot.pos.y, 8, 16, 0xff4444, true);
 
-			////敵に当たった
-			//if ((enemypos - hshot.pos).Magnitude() < 900.0f)
-			//{
-			//	hshot.isActive = false;
-			//}
+			//敵に当たった
+			if ((enemypos - hshot.pos).Magnitude() < 45.0f)
+			{
+				hshot.isActive = false;
+				DrawString(200, 200, "あたり", 0x000000);
+			}
 
 			//範囲外にいった
 			if (hshot.pos.x + 16 < 0 || hshot.pos.x - 16 > 640 ||
@@ -156,6 +157,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			//自機の本体(当たり判定)
 			DrawCircle(playerpos.x, playerpos.y, playerRadius, 0xffaaaa, false, 3);
 		}
+
+
+		//パフォーマンス計測
+		//ドローコール
+		auto dCallCnt = GetDrawCallCount();
+		auto fps = GetFPS();
+
+		//デバッグ表示
+		DrawFormatString(10, 50, 0xff44ff, "DrawCall=%d", dCallCnt);
+		DrawFormatString(10, 100, 0xff44ff, "FPS=%f", fps);
 
 		//弾発射
 		if (frame % 12 == 0) {

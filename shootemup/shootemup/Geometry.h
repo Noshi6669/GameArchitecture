@@ -38,7 +38,8 @@ Vector2 operator*(const Vector2& lval, float num);
 Vector2 operator/(const Vector2& lval, float num);
 
 //内積,外積
-float Dot(const Vector2&);
+float Dot(const Vector2& lval, const Vector2& rval);
+float Cross(const Vector2& lval, const Vector2& rval);
 
 //座標＝ベクトルなので、座標として定義する
 using Position2 = Vector2;
