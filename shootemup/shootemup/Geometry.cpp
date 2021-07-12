@@ -110,3 +110,13 @@ Vector2 operator/(const Vector2& lval, float num)
     }
 
 }
+
+float Dot(const Vector2& lval, const Vector2& rval)
+{
+    return lval.x * rval.x + lval.y * rval.y;
+}
+
+float Cross(const Vector2& lval, const Vector2& rval)
+{
+    return lval.x * rval.y - lval.y * rval.x;
+}
