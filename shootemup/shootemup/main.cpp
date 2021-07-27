@@ -144,7 +144,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			/*hshot.vel = (hshot.vel + (enemypos - hshot.pos).Normalized()).Normalized() * homing_shot_speed;
 			DrawCircleAA(hshot.pos.x, hshot.pos.y, 8, 16, 0xff4444, true);*/
 
-<<<<<<< HEAD
 
 			//敵へのベクトル、および今の速度ベクトルを正規化
 			auto nVelocity = hshot.vel.Normalized();
@@ -158,16 +157,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			DrawCircleAA(hshot.pos.x, hshot.pos.y, 8.0f, 16, 0xff0000);
 
-=======
->>>>>>> f3d85b3c842ce1d55054c33ef183b131fe2efa37
 			//敵に当たった
 			if ((enemypos - hshot.pos).Magnitude() < 45.0f)
 			{
 				hshot.isActive = false;
-<<<<<<< HEAD
-=======
+
 				DrawString(200, 200, "あたり", 0x000000);
->>>>>>> f3d85b3c842ce1d55054c33ef183b131fe2efa37
 			}
 
 			//範囲外にいった

@@ -37,7 +37,6 @@ Vector2 operator*(const Vector2& lval, float num);
 //ベクトルのスカラー除
 Vector2 operator/(const Vector2& lval, float num);
 
-<<<<<<< HEAD
 ///内積を返す
 float Dot(const Vector2& va, const Vector2& vb);
 
@@ -51,12 +50,9 @@ float operator*(const Vector2& va, const Vector2& vb);
 float operator%(const Vector2& va, const Vector2& vb);
 
 
-
-=======
 //内積,外積
 float Dot(const Vector2& lval, const Vector2& rval);
 float Cross(const Vector2& lval, const Vector2& rval);
->>>>>>> f3d85b3c842ce1d55054c33ef183b131fe2efa37
 
 //座標＝ベクトルなので、座標として定義する
 using Position2 = Vector2;

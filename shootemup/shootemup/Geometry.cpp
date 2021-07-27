@@ -111,7 +111,6 @@ Vector2 operator/(const Vector2& lval, float num)
 
 }
 
-<<<<<<< HEAD
 ///“àÏ‚ð•Ô‚·
 float
 Dot(const Vector2& va, const Vector2& vb) {
@@ -135,14 +134,3 @@ float
 operator%(const Vector2& va, const Vector2& vb) {
     return Cross(va, vb);
 }
-=======
-float Dot(const Vector2& lval, const Vector2& rval)
-{
-    return lval.x * rval.x + lval.y * rval.y;
-}
-
-float Cross(const Vector2& lval, const Vector2& rval)
-{
-    return lval.x * rval.y - lval.y * rval.x;
-}
->>>>>>> f3d85b3c842ce1d55054c33ef183b131fe2efa37
