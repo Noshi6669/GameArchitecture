@@ -111,12 +111,26 @@ Vector2 operator/(const Vector2& lval, float num)
 
 }
 
-float Dot(const Vector2& lval, const Vector2& rval)
-{
-    return lval.x * rval.x + lval.y * rval.y;
+///内積を返す
+float
+Dot(const Vector2& va, const Vector2& vb) {
+    return va.x * vb.x + va.y * vb.y;
 }
 
-float Cross(const Vector2& lval, const Vector2& rval)
-{
-    return lval.x * rval.y - lval.y * rval.x;
+///外積を返す
+float
+Cross(const Vector2& va, const Vector2& vb) {
+    return va.x * vb.y - vb.x * va.y;
+}
+
+///内積演算子
+float
+operator*(const Vector2& va, const Vector2& vb) {
+    return Dot(va, vb);
+}
+
+///外積演算子
+float
+operator%(const Vector2& va, const Vector2& vb) {
+    return Cross(va, vb);
 }
