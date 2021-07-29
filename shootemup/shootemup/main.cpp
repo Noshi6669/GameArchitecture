@@ -48,6 +48,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Bullet bullets[256];
 
 	HomingShot HomingShots[16] = {};	//プレイヤーのホーミング弾
+	for (auto shots : HomingShots)
+	{
+
+	}
 
 	Position2 enemypos(320,25);//敵座標
 	Position2 playerpos(320, 400);//自機座標
@@ -126,11 +130,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			{
 				continue;
 			}
-			/*if (frame % 2)
+			if (frame % 2)
 			{
 				hshot.trail.Update();
-			}*/
-			hshot.trail.Update();
+			}
+			//hshot.trail.Update();
 			hshot.pos += hshot.vel;
 			hshot.trail.Draw();
 			//for (int i = 1; i < 5; ++i)

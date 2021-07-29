@@ -8,7 +8,7 @@ struct Bullet {
 	bool isActive = false;//¶‚«‚Ä‚é‚©`H
 };
 
-struct HomingShot :public Bullet
+struct HomingShot : public Bullet
 {
 	Trail trail;
 	HomingShot();
