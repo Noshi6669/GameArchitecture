@@ -37,6 +37,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	int enemyH[2];
 	LoadDivGraph("img/enemy.png", 2, 2, 1, 32, 32, enemyH);
 
+	int arrowH = LoadGraph("img/arrow.png");
+
 
 	//弾の半径
 	float bulletRadius = 5.0f;
@@ -48,9 +50,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Bullet bullets[256];
 
 	HomingShot HomingShots[16] = {};	//プレイヤーのホーミング弾
-	for (auto shots : HomingShots)
+	for (auto& shots : HomingShots)
 	{
-
+		shots.trail.SetHandle(arrowH);
 	}
 
 	Position2 enemypos(320,25);//敵座標
