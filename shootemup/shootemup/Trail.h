@@ -15,5 +15,6 @@ public:
 	void SetHandle(int handle);
 	void Update();
 	void Draw();
+	void Clear();
 };
 

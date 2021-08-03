@@ -118,6 +118,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					hs.vel = { count == 0 ? homing_shot_speed : -homing_shot_speed,4.0f };
 					hs.vel.Normalize();
 					hs.vel = hs.vel *  homing_shot_speed;
+					hs.trail.Clear();
 					isRightHoming = !isRightHoming;
 					if (++count > 1)
 					{

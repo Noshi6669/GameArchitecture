@@ -60,3 +60,8 @@ void Trail::Draw()
 		lastpos = pos;
 	}
 }
+
+void Trail::Clear()
+{
+	history_.clear();
+}
