@@ -50,15 +50,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Bullet bullets[256];
 
 
-	HomingShot HomingShots[16] = {};	//プレイヤーのホーミング弾
+	HomingShot HomingShots[32] = {};	//プレイヤーのホーミング弾
+
 	for (auto& shots : HomingShots)
 	{
 		shots.trail.SetHandle(arrowH);
 	}
 
 	int BombH[12];
+	int BmbCnt[32] = {};
+	Vector2 BmbPos[32] = {};
+	bool BmbFlag[32] = {};
+	memset(BmbFlag, false, sizeof(BmbFlag));
 	int bmbCnt = 0;
-	LoadDivGraph("img/explosion.png", 12, 12, 1, 64, 64, &BombH[0], false);
+	LoadDivGraph("img/explosion.png", 12, 12, 1, 41, 41, BombH);
 
 	Position2 enemypos(320,25);//敵座標
 	Position2 playerpos(320, 400);//自機座標
@@ -71,6 +76,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	int skyy = 0;
 	int skyy2 = 0;
 	int bgidx = 0;
+	int bom = 0;
 	constexpr float homing_shot_speed = 10.0f;
 	bool isRightHoming = false;
 	while (ProcessMessage() == 0) {
@@ -115,12 +121,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				{
 					hs.isActive = true;
 					hs.pos = playerpos;
-					hs.vel = { count == 0 ? homing_shot_speed : -homing_shot_speed,4.0f };
+					hs.vel = { count % 2 == 0 ? homing_shot_speed : -homing_shot_speed,
+							   count * 2.5f};
 					hs.vel.Normalize();
 					hs.vel = hs.vel *  homing_shot_speed;
 					hs.trail.Clear();
 					isRightHoming = !isRightHoming;
-					if (++count > 1)
+					if (++count > 3)
 					{
 						break;
 					}
@@ -166,20 +173,22 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			float sign = Cross(nVelocity, nToEnemy) > 0.0f ? 1.0f : -1.0f;
 			angle = atan2(hshot.vel.y, hshot.vel.x) + sign * angle;
 			hshot.vel = (Vector2(cos(angle), sin(angle)) * homing_shot_speed);
-			
-
-
 			//DrawCircleAA(hshot.pos.x, hshot.pos.y, 8.0f, 16, 0xff0000);
+
 
 			//敵に当たった
 			if ((enemypos - hshot.pos).Magnitude() < 45.0f)
 			{
 				hshot.isActive = false;
 				bmbCnt = 0;
-				Vector2 dpos = {hshot.pos.x - 32,hshot.pos.y - 32};
+				BmbCnt[bom] = 0;
+				BmbPos[bom] = { hshot.pos.x - 20,hshot.pos.y - 40 };
+				BmbFlag[bom] = true;
+				bom++;
+				bom = bom % 32;
 
-				//DrawGraph(dpos.x, dpos.y, BombH[bmbCnt / 6 % 12], true);
-				
+				//爆発の位置の保存
+				//そこでアニメが終わるまで再生
 			}
 
 			//範囲外にいった
@@ -188,6 +197,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				hshot.isActive = false;
 			}
 		}
+
 
 		int pidx = (frame/4 % 2)*5+3;
 		DrawRotaGraph(playerpos.x, playerpos.y, 2.0f, 0.0f, playerH[pidx], true);
@@ -255,6 +265,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		enemypos.x = abs((int)((frame+320) % 1280) - 640);
 		int eidx = (frame / 4 % 2);
 		DrawRotaGraph(enemypos.x, enemypos.y, 2.0f, 0.0f, enemyH[eidx],true);
+
+		for (auto a = 0; a < 32; a++)
+		{
+			if (BmbFlag[a])
+			{
+				DrawGraph(BmbPos[a].x, BmbPos[a].y, BombH[BmbCnt[a] / 6 % 12], true);
+			}
+			BmbCnt[a]++;
+			if (BmbCnt[a] > 72)
+			{
+				BmbCnt[a] = 0;
+				BmbFlag[a] = false;
+			}
+		}
 
 		if (isDebugMode) {
 			//敵の本体(当たり判定)
