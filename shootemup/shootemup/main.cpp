@@ -49,11 +49,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//適当に256個くらい作っとく
 	Bullet bullets[256];
 
+
 	HomingShot HomingShots[16] = {};	//プレイヤーのホーミング弾
 	for (auto& shots : HomingShots)
 	{
 		shots.trail.SetHandle(arrowH);
 	}
+
+	int BombH[12];
+	int bmbCnt = 0;
+	LoadDivGraph("img/explosion.png", 12, 12, 1, 64, 64, &BombH[0], false);
 
 	Position2 enemypos(320,25);//敵座標
 	Position2 playerpos(320, 400);//自機座標
@@ -136,9 +141,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			{
 				hshot.trail.Update();
 			}
-			//hshot.trail.Update();
 			hshot.pos += hshot.vel;
 			hshot.trail.Draw();
+
 			//for (int i = 1; i < 5; ++i)
 			//{
 			//	auto tailPos = hshot.pos - hshot.vel * static_cast<float>(i);
@@ -160,15 +165,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			float sign = Cross(nVelocity, nToEnemy) > 0.0f ? 1.0f : -1.0f;
 			angle = atan2(hshot.vel.y, hshot.vel.x) + sign * angle;
 			hshot.vel = (Vector2(cos(angle), sin(angle)) * homing_shot_speed);
+			
 
-			DrawCircleAA(hshot.pos.x, hshot.pos.y, 8.0f, 16, 0xff0000);
+
+			//DrawCircleAA(hshot.pos.x, hshot.pos.y, 8.0f, 16, 0xff0000);
 
 			//敵に当たった
 			if ((enemypos - hshot.pos).Magnitude() < 45.0f)
 			{
 				hshot.isActive = false;
+				bmbCnt = 0;
+				Vector2 dpos = {hshot.pos.x - 32,hshot.pos.y - 32};
 
-				DrawString(200, 200, "あたり", 0x000000);
+				//DrawGraph(dpos.x, dpos.y, BombH[bmbCnt / 6 % 12], true);
+				
 			}
 
 			//範囲外にいった
@@ -196,9 +206,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		DrawFormatString(10, 100, 0xff44ff, "FPS=%f", fps);
 
 		//弾発射
-		if (frame % 12 == 0) {
-			for (auto& b : bullets) {
-				if (!b.isActive) {
+		if (frame % 12 == 0)
+		{
+			for (auto& b : bullets) 
+			{
+				if (!b.isActive) 
+				{
 					//b.pos = enemypos;
 					//b.vel = Vector2(0, 5);
 					//b.isActive = true;
@@ -247,6 +260,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			DrawCircle(enemypos.x, enemypos.y, 5, 0xffffff, false, 3);
 		}
 		++frame;
+		++bmbCnt;
 		ScreenFlip();
 
 		//キー情報のコピー
