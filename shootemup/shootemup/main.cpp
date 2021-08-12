@@ -17,7 +17,7 @@ using namespace std;
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	ChangeWindowMode(true);
-	SetMainWindowText("Ç‡ÇÒÇ∞Å`");
+	SetMainWindowText("HOMING!");
 	if (DxLib_Init() != 0) {
 		return -1;
 	}

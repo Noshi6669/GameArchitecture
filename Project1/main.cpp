@@ -14,7 +14,7 @@ Position2 GetMousePosition2()
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
 
-	SetWindowText(L"2016212_ïSçáñÏÈDëæ");
+	SetWindowText(L"WAVE");
 
 	ChangeWindowMode(true);
 	DxLib_Init();
